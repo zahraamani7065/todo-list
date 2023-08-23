@@ -1,26 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list_app/utils/images/svg_logos.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/onboading_item.dart';
 
 class OnboadingTwo extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
+    final localization=AppLocalizations.of(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.black,
-      body: OnboadingItemsWidget(
+        child: OnboadingItemsWidget(
         height: height,
         width: width,
-        title: "Create daily routine",
+        title: localization!.titleTwo,
         imageSource: svgSourceOnBoadingTwo,
         index: 2,
-        firstGuidance: "In Uptodo you can create your ",
-        secondGuidance: "personalized routine to stay productive ",
+        firstGuidance: localization!.firstGuidanceOne,
+        secondGuidance: localization!.secondGuidanceOne,
       ),
-    ));
+    );
   }
 }

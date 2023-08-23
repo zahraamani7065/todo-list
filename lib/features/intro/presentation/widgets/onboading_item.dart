@@ -4,10 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:todo_list_app/features/intro/presentation/screens/onboading_one.dart';
 import 'package:todo_list_app/features/intro/presentation/screens/onboading_three.dart';
 import 'package:todo_list_app/features/intro/presentation/screens/startScreen.dart';
-
-import '../../../../utils/images/svg_logos.dart';
-import '../screens/introduction_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:todo_list_app/main.dart';
 import '../screens/onboading_two.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboadingItemsWidget extends StatelessWidget {
   const OnboadingItemsWidget({
@@ -31,6 +31,8 @@ class OnboadingItemsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization=AppLocalizations.of(context);
+    final textTheme = Theme.of(context).textTheme;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -38,9 +40,9 @@ class OnboadingItemsWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Skip",
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+             Text(
+              AppLocalizations.of(context)!.skip,
+              style: textTheme.headline1,
             ),
             Center(child: SvgPicture.string(imageSource)),
             SizedBox(
@@ -75,10 +77,7 @@ class OnboadingItemsWidget extends StatelessWidget {
             Center(
               child: Text(
                 title,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 32,
-                    color: Colors.white),
+                style: textTheme.headline6,
               ),
             ),
             SizedBox(
@@ -88,20 +87,14 @@ class OnboadingItemsWidget extends StatelessWidget {
               child: Text(
                 firstGuidance,
                 textDirection: TextDirection.ltr,
-                style: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16,
-                    color: Colors.grey),
+                style: textTheme.headline2,
               ),
             ),
             Center(
               child: Text(
                 secondGuidance,
                 textDirection: TextDirection.ltr,
-                style: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16,
-                    color: Colors.grey),
+                style: textTheme.headline2,
               ),
             ),
             SizedBox(
@@ -117,7 +110,7 @@ class OnboadingItemsWidget extends StatelessWidget {
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         if (index == 1) {
-                          return const IntroductionScreen();
+                          return MyApp();
                         } else if (index == 2) {
                           return OnboadingOne();
                         }
@@ -131,9 +124,9 @@ class OnboadingItemsWidget extends StatelessWidget {
                         ),
                         primary: Colors.black,
                         minimumSize: Size(width / 4, 50)),
-                    child: const Text(
-                      "Back",
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
+                    child:  Text(
+                      localization!.back,
+                      style: textTheme.headline2,
                     ),
                   ),
                   ElevatedButton(
@@ -143,7 +136,7 @@ class OnboadingItemsWidget extends StatelessWidget {
                         if (index == 1) {
                           return OnboadingTwo();
                         } else if (index == 2) {
-                          return OnBoadingthree();
+                          return const OnBoadingthree();
                         }
 
                         return StartScreen();
@@ -153,11 +146,11 @@ class OnboadingItemsWidget extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        primary: Colors.indigoAccent,
+                        backgroundColor: Theme.of(context).primaryColor ,
                         minimumSize: Size(width / 4, 50)),
-                    child: const Text(
-                      "Next",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    child:  Text(
+                      localization.next,
+                      style: textTheme.headline3,
                     ),
                   ),
                 ],

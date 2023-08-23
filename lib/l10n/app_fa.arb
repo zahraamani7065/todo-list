@@ -1,0 +1,33 @@
+{
+ "skip":"پرش",
+ "chooseLan":"انتخاب زبان",
+ "english":"انگلیسی",
+ "persian":"فارسی",
+ "titleOne":"مدیریت تسک",
+ "titleTwo":"ایجاد روتین روزانه",
+ "titleThree":"سازماندهی تسک ",
+ "next":"بعدی",
+ "back":"قبلی",
+ "logIn":"ورود",
+ "createAccount":"ساخت اکانت",
+ "firstGuidanceOne":"شما می توانید تمام کارهای روزانه خود را مدیریت کنید",
+ "firstGuidanceTwo":"در این برنامه می توانید ایجاد کنید",
+ "firstGuidanceThree":"میتوانید تسک های خود را سازماندهی کنید توسط",
+ "secondGuidanceOne":"به طور کاملا رایگان",
+ "secondGuidanceTwo":"روال شخصی سازی شده برای کارآمد ماندن",
+ "secondGuidanceThree":"اضافه کردن تسک ها ب کتوگری ها",
+ "welcome":"خوش امدید",
+ "loginRequestOne":"لطفا وارد شوید یااکانت",
+ "loginRequestTwo":"جدید برای ادامه بسازید",
+ "signUpWithGoogle":"ثبت نام با حساب گوگل",
+ "index":"فهرست",
+ "emptyScreenText":"امروز میخایی چیکار کنی؟",
+ "topToPlus":"افزودن تسک با زدن دکمه +",
+ "addTask":"اضافه کردن تسک",
+ "taskTitle":"عنوان تسک",
+ "description":"توضیح",
+ "search":"...جستجوی تسک",
+ "add":"اضافه کردن"
+
+
+}

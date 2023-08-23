@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "746295849488",
+    "project_id": "sign-in-aecdf",
+    "storage_bucket": "sign-in-aecdf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746295849488:android:e606c1a90796e486ab5095",
+        "android_client_info": {
+          "package_name": "com.example.todo_list_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746295849488-21c268bkj95h1frkdbkvfcghp26boat6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGA4jbbe1Msrz4TuN7rOZ0J8qWiEAn8CA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746295849488-21c268bkj95h1frkdbkvfcghp26boat6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
