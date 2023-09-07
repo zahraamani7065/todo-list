@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list_app/features/intro/presentation/screens/onboading_three.dart';
-import 'package:todo_list_app/features/login/screen/login_Screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../authentication/screen/login_Screen.dart';
 
 class StartScreen extends StatelessWidget {
   @override

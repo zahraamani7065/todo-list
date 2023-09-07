@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:todo_list_app/features/home/presentation/screens/home_screen.dart';
-import 'package:todo_list_app/features/home/presentation/screens/wrapper.dart';
-import 'package:todo_list_app/features/intro/presentation/widgets/main_wrapper.dart';
-import 'package:todo_list_app/utils/images/svg_logos.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
+import '../../../../core/utils/images/svg_logos.dart';
+import '../../../main/presentation/screens/wrapper.dart';
+
 
 class IntroductionScreen extends StatefulWidget {
   final Function(Language language) selectedLang;
@@ -21,6 +21,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
     Future.delayed(const Duration(seconds: 1)).then((value) =>
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
+
           return Wrapper();
         })));
     // TODO: implement initState
