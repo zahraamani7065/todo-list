@@ -22,9 +22,9 @@ setUp() async{
   //   },
   // );
 
+  locator.registerFactory<CategoryDataAdapter>(()=> CategoryDataAdapter());
 
   locator.registerFactory<TaskAdapter>(() => TaskAdapter());
-  locator.registerFactory<CategoryDataAdapter>(()=> CategoryDataAdapter());
 
   //repository
   locator.registerSingleton<DataRepository>(DataRepositoryImpl());

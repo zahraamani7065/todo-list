@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:todo_list_app/core/resorces/data_state.dart';
+import 'package:todo_list_app/features/category/domain/entity/category_entity.dart';
 import 'package:todo_list_app/features/main/domain/entity/data_entity.dart';
 import 'package:todo_list_app/features/main/domain/repository/data_repository.dart';
 
@@ -7,20 +8,18 @@ import '../../../../main.dart';
 import '../data_source/local/data.dart';
 
 class DataRepositoryImpl implements DataRepository {
-
+  final box = Hive.box<Task>(taskBoxName);
   @override
   Future<DataState<DataEntity>> createOrUpdate(DataEntity data) async {
 
-    final box = Hive.box<DataEntity>(taskBoxName);
-    DataEntity dataEntity = DataEntity(
-        name: data.name,
-        description:data.description ,
-        iscompleted: data.iscompleted,
-        dateTime: data.dateTime,
-        category: data.category,
-        proirity: data.proirity);
-    box.add(dataEntity);
-    return DataSuccess(dataEntity);
+    // Convert DataEntity to Task using the constructor
+    Task task = Task.fromDataEntity(data);
+
+    // Add the Task object to the Hive box
+    await box.add(task);
+    print(task);
+    // await box.clear();
+    return DataSuccess(data);
 
 
   }
@@ -51,10 +50,19 @@ class DataRepositoryImpl implements DataRepository {
 
   @override
   Future<DataState<List<DataEntity>>> getAll({String? searchKeyword}) async {
-    final box = Hive.box<DataEntity>(taskBoxName);
-    List<DataEntity> data = box.values.cast<DataEntity>().toList();
-    print("data is $data");
+
+    List<Task> tasks = box.values.toList();
+    print("data is $tasks");
+
     try {
+      List<DataEntity> data = tasks.map((task) => DataEntity(
+        name: task.name,
+        iscompleted: task.isComleted,
+        proirity: task.proirity,
+        dateTime: task.dateTime,
+        description: task.description,
+        category: CategoryEntity(categoryColorEntity: task.category.color, categoryNameEntity: task.category.name, categoryIconEntity: task.category.icon), // You should handle this conversion if needed
+      )).toList();
       return DataSuccess(data);
     }
     catch (e) {

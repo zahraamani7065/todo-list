@@ -20,18 +20,22 @@ const int addTask = 4;
 
 class _WrapperState extends State<Wrapper> {
   int _currentIndex = 0;
+   TaskListBloc taskListBloc = locator<TaskListBloc>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body:
-        BlocProvider(
-        // create:(context)=> TaskListBloc (locator(), locator()),
-
-        create: (_) => locator<TaskListBloc>(),
-        child:
+        // BlocProvider(
+        // // create:(context)=> TaskListBloc (locator(), locator()),
+        //
+        // create: (_) => locator<TaskListBloc>(),
+        // child:
         Stack(children: [
-          HomeScreen(),
+          BlocProvider(
+            create: (_) => taskListBloc,
+            child:
+            HomeScreen(),),
           Positioned(
             bottom: 0,
             left: 0,
@@ -40,17 +44,20 @@ class _WrapperState extends State<Wrapper> {
               onSelectedTab: (int index) {
                 setState(() {
                   if (index == 0) {
-                    HomeScreen();
+                    BlocProvider(
+                      create: (_) => locator<TaskListBloc>(),
+                      child:
+                      HomeScreen(),);
                   } else if (index == 1) {
                     profileDialog(context);
                   }
-                  else if(index==2){
+                  else if (index == 2) {
                     focuseDialog(context);
                   }
-                  else if(index==3){
+                  else if (index == 3) {
                     calenderDialog(context);
                   }
-                  else if(index==4){
+                  else if (index == 4) {
                     addDialog(context);
                   }
                 });
@@ -58,8 +65,7 @@ class _WrapperState extends State<Wrapper> {
               selectedIndex: _currentIndex,
             ),
           )
-        ])),
-    );
+        ]));
   }
 
   Future<dynamic> profileDialog(BuildContext context) {
@@ -123,16 +129,19 @@ class _WrapperState extends State<Wrapper> {
   }
 
   Future<dynamic> addDialog(BuildContext context) {
+    if (taskListBloc.isClosed) {
+      taskListBloc = locator<TaskListBloc>();
+    }
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return
-        BlocProvider(
-          create:(_)=> locator<TaskListBloc> (),
-        child:
-          AddTaskDialog()
+          // BlocProvider<TaskListBloc>.value(
+          //     value: taskListBloc,
+          //     child:
+              AddTaskDialog();
 
-        );
+          // );
       },
     );
   }

@@ -17,7 +17,7 @@ class CategoryDataAdapter extends TypeAdapter<CategoryData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CategoryData(
-      fields[0] as Color,
+      fields[0] as int,
       fields[1] as String,
       fields[2] as String,
     );
@@ -25,7 +25,14 @@ class CategoryDataAdapter extends TypeAdapter<CategoryData> {
 
   @override
   void write(BinaryWriter writer, CategoryData obj) {
-    writer.writeByte(0);
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.color)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.icon);
   }
 
   @override

@@ -5,8 +5,13 @@ part 'category_data.g.dart';
 
 @HiveType(adapterName: 'CategoryDataAdapter',  typeId: 3)
 class CategoryData {
-   Color color=Color(0xFF0000FF);
+  @HiveField(0)
+  int color= Color(0xFF0000FF).value;
+
+  @HiveField(1)
    String name="";
+
+  @HiveField(2)
    String icon="";
 
   CategoryData(this.color, this.name, this.icon);

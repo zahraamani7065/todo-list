@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_list_app/features/category/domain/entity/category_entity.dart';
 import 'package:todo_list_app/features/main/domain/entity/data_entity.dart';
+import 'package:todo_list_app/features/main/presentation/%20block/save_task_status.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/task_list_bloc.dart';
 
+import '../../../../locator.dart';
 
 class AddTaskDialog extends StatefulWidget {
   @override
@@ -19,6 +22,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   late TextEditingController _controller;
   late int _proirity;
   late TextEditingController _descriptionController;
+
+  // late final TaskListBloc taskListBloc;
 
   @override
   void dispose() {
@@ -35,6 +40,18 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     _controller = TextEditingController();
     _descriptionController = TextEditingController();
     _proirity = 1;
+    // taskListBloc = BlocProvider.of<TaskListBloc>(context);
+  }
+
+  void resetDialogState() {
+    setState(() {
+      _controller.clear();
+      _descriptionController.clear();
+      _proirity = 1;
+      // DataEntity dataEntity=DataEntity(name: name, description: description, iscompleted: iscompleted, dateTime: dateTime, category: category, proirity: proirity)
+      // dispose();
+      // You can also reset other state variables as needed
+    });
   }
 
   @override
@@ -45,32 +62,36 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     final textTheme = Theme.of(context).textTheme;
     final localization = AppLocalizations.of(context);
 
-    return BlocBuilder<TaskListBloc,TaskListState>(
-      builder: (BuildContext context, TaskListState state) {
-
-        return AlertDialog(
-          title: Text(
-            localization!.addTask,
-            style: textTheme.headline5,
-          ),
-          content: Container(
-            height: height / 4,
-            child: Column(
-              children: [
-                TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(labelText: localization.taskTitle),
-                ),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(labelText: localization.description),
-                )
-              ],
+    return
+      BlocProvider(
+      create: (_) => locator<TaskListBloc>(),
+      child:
+      BlocBuilder<TaskListBloc, TaskListState>(
+        builder: (BuildContext context, state) {
+          return AlertDialog(
+            title: Text(
+              localization!.addTask,
+              style: textTheme.headline5,
             ),
-          ),
-          actions: [
-            Row(
-              children: [
+            content: Container(
+              height: height / 4,
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _controller,
+                    decoration:
+                        InputDecoration(labelText: localization.taskTitle),
+                  ),
+                  TextField(
+                    controller: _descriptionController,
+                    decoration:
+                        InputDecoration(labelText: localization.description),
+                  )
+                ],
+              ),
+            ),
+            actions: [
+              Row(children: [
                 IconButton(
                     onPressed: () async {
                       DateTime? pickedDate = await showDatePicker(
@@ -84,7 +105,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                         print(
                             pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                         String formattedDate =
-                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
                         print(formattedDate);
                         if (pickedDate != null) {
                           //formatted date output using intl package =>  2021-03-16
@@ -114,17 +135,18 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                                     height: height / 3,
                                     child: ListView.builder(
                                         itemCount: 3, // Number of rows
-                                        itemBuilder:
-                                            (BuildContext context, int rowIndex) {
+                                        itemBuilder: (BuildContext context,
+                                            int rowIndex) {
                                           return Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                            children:
-                                            List.generate(3, (int columnIndex) {
-                                              int priority =
-                                                  rowIndex * 3 + columnIndex + 1;
+                                                CrossAxisAlignment.center,
+                                            children: List.generate(3,
+                                                (int columnIndex) {
+                                              int priority = rowIndex * 3 +
+                                                  columnIndex +
+                                                  1;
                                               return GestureDetector(
                                                   onTap: () {
                                                     _proirity = priority;
@@ -133,7 +155,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                                                   },
                                                   child: Padding(
                                                     padding:
-                                                    const EdgeInsets.all(4),
+                                                        const EdgeInsets.all(4),
                                                     child: Container(
                                                         width: width / 5,
                                                         height: height / 10,
@@ -142,17 +164,19 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                                                                 .colorScheme
                                                                 .onSecondary,
                                                             borderRadius:
-                                                            BorderRadius
-                                                                .circular(4)),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4)),
                                                         child: Row(
                                                             crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
+                                                                CrossAxisAlignment
+                                                                    .center,
                                                             mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
+                                                                MainAxisAlignment
+                                                                    .center,
                                                             children: [
-                                                              Text(' $priority'),
+                                                              Text(
+                                                                  ' $priority'),
                                                               const SizedBox(
                                                                 width: 4,
                                                               ),
@@ -168,32 +192,64 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     },
                     icon: const Icon(Icons.flag)),
                 Expanded(
-                  child: TextButton(
-                    child: Text(localization.add),
-                    onPressed: () {
-                      final task = DataEntity(
-                          name: _controller.text,
-                          description: _descriptionController.text.toString(),
-                          iscompleted: false,
-                          dateTime: _dateTime,
-                          category: CategoryEntity(
-                            categoryIconEntity: "Home",
-                            categoryNameEntity: "Home",
-                            categoryColorEntity:"Blue",
-                          ),
-                          proirity: _proirity);
-                      BlocProvider.of<TaskListBloc>(context).add(SaveDataEvent(task));
-                      BlocProvider.of<TaskListBloc>(context).add(GetAllDataEvent());
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              ],
-            )
-          ],
-         );
-      },
+                    child: TextButton(
+                        child: Text(localization.add),
+                        onPressed: () {
+                          final taskListBloc =
+                              BlocProvider.of<TaskListBloc>(context);
+                          if (!taskListBloc.isClosed) {
+                            print("not close");
+                            if (state.saveDataStatus is SaveTaskLoading) {
+                              print("loagind state");
+                              final task = DataEntity(
+                                  name: _controller.text,
+                                  description:
+                                      _descriptionController.text.toString(),
+                                  iscompleted: false,
+                                  dateTime: _dateTime,
+                                  category: CategoryEntity(
+                                    categoryIconEntity: "Home",
+                                    categoryNameEntity: "Home",
+                                    categoryColorEntity:
+                                        const Color(0xFF0000FF).value,
+                                  ),
+                                  proirity: _proirity);
+                              taskListBloc.add(SaveDataEvent(task));
 
+                              resetDialogState();
+                              Navigator.of(context).pop();
+                              // resetDialogState();
+                            }
+
+                            // await for (final state in taskListBloc) {
+                            else if (state.saveDataStatus
+                                is SaveTaskCompleted) {
+                              taskListBloc.add(GetAllDataEvent());
+                            } else if (state.saveDataStatus is SaveTaskError) {
+                              Center(child: Text("error"));
+                            }
+                            // }
+                            //   else if (state.saveDataStatus is SaveTaskCompleted) {
+                            //
+                            // }
+                          }
+                        })),
+              ])
+            ],
+          );
+        },
+      )
     );
   }
 }
+// else if (state.saveDataStatus is SaveTaskCompleted) {
+//   setState(() {
+//     taskListBloc
+//         .add(GetAllDataEvent());
+//   });
+//
+//
+//   }
+//   else if (state.saveDataStatus is SaveTaskError) {
+//     Center(child: Text("error"));
+//   }
