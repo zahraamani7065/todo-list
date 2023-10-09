@@ -46,12 +46,15 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       emit(state.copywith(newSaveDataStatus: SaveTaskLoading()));
       print("loading");
       final saveResult = await saveDataUseCase(event.dataEntity);
-
+      DataState dataState = await getAllDataUseCase(NoParams());
       if (saveResult is DataSuccess) {
-        // Data was saved successfully, update the state accordingly.
+        final newGetAllDataStatus = GetAllDataCompleted(dataState.data);
+
         emit(
           state.copywith(
-              newSaveDataStatus: SaveTaskCompleted(saveResult.data!)),
+            newSaveDataStatus: SaveTaskCompleted(saveResult.data!),
+            newGetAllDataStatus: newGetAllDataStatus,
+          ),
         );
         print("save data");
         // Navigator.of(context).pop();
