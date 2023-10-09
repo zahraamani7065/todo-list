@@ -26,11 +26,6 @@ class _WrapperState extends State<Wrapper> {
   Widget build(BuildContext context) {
     return Scaffold(
         body:
-        // BlocProvider(
-        // // create:(context)=> TaskListBloc (locator(), locator()),
-        //
-        // create: (_) => locator<TaskListBloc>(),
-        // child:
         Stack(children: [
           BlocProvider(
             create: (_) => taskListBloc,

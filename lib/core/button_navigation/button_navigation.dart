@@ -27,7 +27,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     final textTheme = Theme.of(context).textTheme;
     // final localization = AppLocalizations.of(context);
     return Container(
-      height: 85,
+      height: height/8,
       child: Stack(
         children: [
           Positioned(
