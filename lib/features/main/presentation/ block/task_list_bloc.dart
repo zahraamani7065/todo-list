@@ -24,117 +24,57 @@ class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
       : super(TaskListState(
             getAllDataStatus: GetAllDataLoading(),
             saveDataStatus: SaveTaskLoading())) {
+
+
     on<GetAllDataEvent>((event, emit) async {
-      emit(state.copywith(newGetAllDataStatus: GetAllDataLoading()));
-      DataState dataState = await getAllDataUseCase(NoParams());
+      try{
+          print("00");
+          emit(state.copywith(newGetAllDataStatus: GetAllDataLoading()));
+          DataState dataState = await getAllDataUseCase(NoParams());
 
-      print(getAllDataUseCase(NoParams()));
+          print("$dataState data state");
 
-      if (dataState is DataSuccess) {
+          if (dataState is DataSuccess) {
+            emit(state.copywith(
+                newGetAllDataStatus: GetAllDataCompleted(dataState.data)));
+            print("Data fetched successfully.");
+          }
+
+          if (dataState is DataFailed) {
+            emit(state.copywith(
+                newGetAllDataStatus: GetAllDataError(dataState.error)));
+          }}
+      catch(e){
         emit(state.copywith(
-            newGetAllDataStatus: GetAllDataCompleted(dataState.data)));
-        print("Data fetched successfully.");
-      }
+            newGetAllDataStatus: GetAllDataError(e.toString())));
 
-      if (dataState is DataFailed) {
-        emit(state.copywith(
-            newGetAllDataStatus: GetAllDataError(dataState.error)));
       }
     });
+
 
     on<SaveDataEvent>((event, emit) async {
-      emit(state.copywith(newSaveDataStatus: SaveTaskLoading()));
-      print("loading");
-      final saveResult = await saveDataUseCase(event.dataEntity);
-      DataState dataState = await getAllDataUseCase(NoParams());
-      if (saveResult is DataSuccess) {
-        final newGetAllDataStatus = GetAllDataCompleted(dataState.data);
+      try {
+        emit(state.copywith(newSaveDataStatus: SaveTaskLoading()));
 
-        emit(
-          state.copywith(
-            newSaveDataStatus: SaveTaskCompleted(saveResult.data!),
-            newGetAllDataStatus: newGetAllDataStatus,
-          ),
-        );
-        print("save data");
-        // Navigator.of(context).pop();
+        final saveResult = await saveDataUseCase(event.dataEntity);
+        DataState dataState = await getAllDataUseCase(NoParams());
 
-      } else if (saveResult is DataFailed) {
-        // Handle the case where data saving failed.
-        emit(
-            state.copywith(newSaveDataStatus: SaveTaskError(saveResult.error)));
-      }
-    });
+        if (saveResult is DataSuccess) {
+          emit(state.copywith(
+              newSaveDataStatus: SaveTaskCompleted(saveResult.data!),
+            newGetAllDataStatus: GetAllDataCompleted(dataState.data),
+              ));
+
+          print("save and get  are worked");
+
+          } else if (saveResult is DataFailed) {
+            emit(state.copywith(newSaveDataStatus: SaveTaskError(saveResult.error)));
+            print("save task error");
+            }
+            } catch (e) {
+              emit(state.copywith(newSaveDataStatus: SaveTaskError(e.toString())));
+              }
+              });
   }
 }
 
-// });
-// emit(state.copywith(newSaveDataStatus: SaveTaskLoading()));
-// final saveResult = await saveDataUseCase(event.dataEntity);
-//
-// if (saveResult is DataSuccess) {
-//   // Data was saved successfully, update the state accordingly.
-//   emit(state.copywith(
-//       newSaveDataStatus: SaveTaskCompleted(saveResult.data!)));
-// } else if (saveResult is DataFailed) {
-//   // Handle the case where data saving failed.
-//   emit(state.copywith(
-//       newSaveDataStatus: SaveTaskError(saveResult.error)));
-// }
-
-// class TaskListBloc extends Bloc<TaskListEvent, TaskListState> {
-//   GetAllDataUseCase getAllDataUseCase;
-//   SaveDataUseCase saveDataUseCase;
-//
-//   TaskListBloc(this.getAllDataUseCase, this.saveDataUseCase)
-//       : super(TaskListState(
-//             getAllDataStatus: GetAllDataLoading(),
-//             saveDataStatus: SaveTaskLoading()
-//   )) {
-//
-//     on<TaskListEvent>((event,emit) {
-//
-//         on<GetAllDataEvent>((event,emit) async {
-//
-//         //emit loading state
-//         emit(state.copywith(newGetAllDataStatus: GetAllDataLoading()));
-//
-//
-//         DataState dataState = await getAllDataUseCase(NoParams());
-//         print(getAllDataUseCase(NoParams()));
-//
-//         if (dataState is DataSuccess) {
-//           emit(state.copywith(
-//               newGetAllDataStatus: GetAllDataCompleted(dataState.data)));
-//           print("Data fetched successfully.");
-//         }
-//
-//         else if (dataState is DataFailed) {
-//           emit(state.copywith(
-//               newGetAllDataStatus: GetAllDataError(dataState.error)));
-//         }
-//
-//         });
-//
-//       on< SaveDataEvent>(event,state) async{
-//         // on<SaveDataEvent>((event, emit) async {
-//         emit(state.copywith(newSaveDataStatus: SaveTaskLoading()));
-//         final saveResult = await saveDataUseCase(event.dataEntity);
-//
-//         if (saveResult is DataSuccess) {
-//           // Data was saved successfully, update the state accordingly.
-//           emit(
-//             state.copywith(
-//                 newSaveDataStatus: SaveTaskCompleted(saveResult.data!)),
-//           );
-//           print("save data");
-//         } else if (saveResult is DataFailed) {
-//           // Handle the case where data saving failed.
-//           emit(state.copywith(
-//               newSaveDataStatus: SaveTaskError(saveResult.error)));
-//         }
-//       }
-//       // });
-//     });
-//   }
-// }

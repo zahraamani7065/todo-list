@@ -6,10 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/features/category/domain/entity/category_entity.dart';
 import 'package:todo_list_app/features/main/domain/entity/data_entity.dart';
+import 'package:todo_list_app/features/main/domain/use_case/save_task_usecase.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/save_task_status.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/task_list_bloc.dart';
 
-import '../../../../locator.dart';
+import '../ block/get_task_status.dart';
+import '../../../../core/services/locator.dart';
+import '../../domain/use_case/get_all_data_usecase.dart';
 
 class AddTaskDialog extends StatefulWidget {
   @override
@@ -40,7 +43,6 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     _controller = TextEditingController();
     _descriptionController = TextEditingController();
     _proirity = 1;
-    // taskListBloc = BlocProvider.of<TaskListBloc>(context);
   }
 
   void resetDialogState() {
@@ -48,9 +50,11 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       _controller.clear();
       _descriptionController.clear();
       _proirity = 1;
-      // DataEntity dataEntity=DataEntity(name: name, description: description, iscompleted: iscompleted, dateTime: dateTime, category: category, proirity: proirity)
-      // dispose();
-      // You can also reset other state variables as needed
+      final newTaskListState = TaskListState(
+        getAllDataStatus: GetAllDataLoading(),
+        saveDataStatus: SaveTaskLoading(),
+      );
+      BlocProvider.of<TaskListBloc>(context).emit(newTaskListState);
     });
   }
 
@@ -61,19 +65,28 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     final height = MediaQuery.of(context).size.height;
     final textTheme = Theme.of(context).textTheme;
     final localization = AppLocalizations.of(context);
+    bool customBuildWhen(TaskListState previousState, TaskListState currentState) {
+        bool saveData= previousState.saveDataStatus != currentState.saveDataStatus;
+        bool getData=previousState.getAllDataStatus != currentState.getAllDataStatus;
 
+        return saveData !=getData;
+    }
     return
-      BlocProvider(
-      create: (_) => locator<TaskListBloc>(),
-      child:
+      // BlocProvider(
+      // create: (context) => locator<TaskListBloc>(),
+      // child:
       BlocBuilder<TaskListBloc, TaskListState>(
+        buildWhen: customBuildWhen,
         builder: (BuildContext context, state) {
-          return AlertDialog(
-            title: Text(
+          return
+            AlertDialog(
+              title: Text(
               localization!.addTask,
               style: textTheme.headline5,
             ),
-            content: Container(
+              content: StatefulBuilder(  // You need this, notice the parameters below:
+              builder: (BuildContext context, StateSetter setState) {
+             return  Container(
               height: height / 4,
               child: Column(
                 children: [
@@ -88,8 +101,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                         InputDecoration(labelText: localization.description),
                   )
                 ],
-              ),
-            ),
+              ));
+              }),
             actions: [
               Row(children: [
                 IconButton(
@@ -192,15 +205,23 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                     },
                     icon: const Icon(Icons.flag)),
                 Expanded(
+
                     child: TextButton(
+
                         child: Text(localization.add),
-                        onPressed: () {
-                          final taskListBloc =
-                              BlocProvider.of<TaskListBloc>(context);
-                          if (!taskListBloc.isClosed) {
-                            print("not close");
-                            if (state.saveDataStatus is SaveTaskLoading) {
-                              print("loagind state");
+                        onPressed: () async{
+                          // if (taskListBloc.isClosed) {
+                          //   // Reinitialize the taskListBloc
+                          //   taskListBloc.close();
+                          //
+                          //   // Recreate a new instance of TaskListBloc
+                          //    taskListBloc =
+                          //   BlocProvider.of<TaskListBloc>(context);
+                          // }
+                          //  if (!taskListBloc.isClosed) {
+                          //   print("not close");
+                            // if (state.saveDataStatus is SaveTaskLoading) {
+                              print("loading state");
                               final task = DataEntity(
                                   name: _controller.text,
                                   description:
@@ -214,42 +235,27 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                                         const Color(0xFF0000FF).value,
                                   ),
                                   proirity: _proirity);
-                              taskListBloc.add(SaveDataEvent(task));
-
+                              BlocProvider.of<TaskListBloc>(context).add(SaveDataEvent(task));
                               resetDialogState();
                               Navigator.of(context).pop();
-                              // resetDialogState();
-                            }
 
-                            // await for (final state in taskListBloc) {
-                            else if (state.saveDataStatus
-                                is SaveTaskCompleted) {
-                              taskListBloc.add(GetAllDataEvent());
-                            } else if (state.saveDataStatus is SaveTaskError) {
-                              Center(child: Text("error"));
+
                             }
-                            // }
-                            //   else if (state.saveDataStatus is SaveTaskCompleted) {
+                            //  if (state.saveDataStatus is SaveTaskCompleted) {
                             //
+                            //    resetDialogState();
+                            //   Navigator.of(context).pop();
+                            // } else if (state.saveDataStatus is SaveTaskError) {
+                            //   const Center(child: Text("error"));
+                            //   print("error");
                             // }
-                          }
-                        })),
+                          // }
+                        )),
               ])
             ],
           );
         },
       )
-    );
+    ;
   }
 }
-// else if (state.saveDataStatus is SaveTaskCompleted) {
-//   setState(() {
-//     taskListBloc
-//         .add(GetAllDataEvent());
-//   });
-//
-//
-//   }
-//   else if (state.saveDataStatus is SaveTaskError) {
-//     Center(child: Text("error"));
-//   }

@@ -9,8 +9,8 @@ import 'package:todo_list_app/features/main/domain/repository/data_repository.da
 import 'package:todo_list_app/features/main/domain/use_case/save_task_usecase.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/task_list_bloc.dart';
 
-import 'features/main/domain/use_case/get_all_data_usecase.dart';
-import 'main.dart';
+import '../../features/main/domain/use_case/get_all_data_usecase.dart';
+import '../../main.dart';
 
  GetIt locator=GetIt.instance;
 setUp() async{
@@ -35,7 +35,12 @@ setUp() async{
   locator.registerSingleton<SaveDataUseCase>(SaveDataUseCase(dataRepository: locator()));
 
   //
-  locator.registerSingleton<TaskListBloc>(TaskListBloc(locator(),locator()));
+  //locator.registerSingleton<TaskListBloc>(TaskListBloc(locator(),locator()));
+
+
+  // Register TaskListBloc
+  locator.registerFactory(() => TaskListBloc(locator(),locator()
+  ));
 
 }
 

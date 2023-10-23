@@ -6,7 +6,7 @@ import 'core/configs/theme_config.dart';
 import 'features/intro/presentation/screens/introduction_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'features/main/data/data_source/local/data.dart';
-import 'locator.dart';
+import 'core/services/locator.dart';
 
 
 

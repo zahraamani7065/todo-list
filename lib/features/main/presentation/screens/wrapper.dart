@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/task_list_bloc.dart';
-import 'package:todo_list_app/locator.dart';
+import 'package:todo_list_app/core/services/locator.dart';
 import '../../../../../core/button_navigation/button_navigation.dart';
 import '../widgets/add_task_dialog.dart';
 import 'home_screen.dart';
@@ -30,7 +30,8 @@ class _WrapperState extends State<Wrapper> {
           BlocProvider(
             create: (_) => taskListBloc,
             child:
-            HomeScreen(),),
+            HomeScreen(),
+          ),
           Positioned(
             bottom: 0,
             left: 0,
@@ -40,9 +41,11 @@ class _WrapperState extends State<Wrapper> {
                 setState(() {
                   if (index == 0) {
                     BlocProvider(
-                      create: (_) => locator<TaskListBloc>(),
+                      create: (_) => taskListBloc,
                       child:
-                      HomeScreen(),);
+                      HomeScreen()
+                  )
+                  ;
                   } else if (index == 1) {
                     profileDialog(context);
                   }
@@ -124,19 +127,16 @@ class _WrapperState extends State<Wrapper> {
   }
 
   Future<dynamic> addDialog(BuildContext context) {
-    if (taskListBloc.isClosed) {
-      taskListBloc = locator<TaskListBloc>();
-    }
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return
-          // BlocProvider<TaskListBloc>.value(
-          //     value: taskListBloc,
-          //     child:
-              AddTaskDialog();
+          BlocProvider<TaskListBloc>.value(
+              value: taskListBloc,
+              child:
+              AddTaskDialog()
 
-          // );
+          );
       },
     );
   }
