@@ -11,6 +11,7 @@ import 'core/services/locator.dart';
 
 
 const taskBoxName="tasks";
+const categoryBoxName="categories";
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +19,7 @@ void main() async{
   Hive.registerAdapter<CategoryData>(CategoryDataAdapter());
   Hive.registerAdapter<Task>(TaskAdapter());
 
-  await Hive.openBox<CategoryData>('CategoryDataAdapter');
+  await Hive.openBox<CategoryData>(categoryBoxName);
   await Hive.openBox<Task>(taskBoxName);
   await setUp();
 

@@ -27,7 +27,18 @@
  "taskTitle":"عنوان تسک",
  "description":"توضیح",
  "search":"...جستجوی تسک",
- "add":"اضافه کردن"
+ "add":"اضافه کردن",
+ "categoryAppBar":"ایجاد دسته بندی جدید",
+ "selectPriority":"انتخاب اولویت",
+ "chooseCategory":"انتخاب دسته بندی",
+ "addCategory":"اضافه کردن دسته بندی",
+ "categoryName":"نام دسته بندی:",
+ "enterName":"وارد کردن نام ",
+ "categoryIcon":" :ایکون دسته بندی",
+ "chooseIcon":"انتخاب ایکون ",
+ "categoryColor":"انتخاب رنگ:",
+ "submit":"ثبت",
+ "cancel":"لغو"
 
 
 }

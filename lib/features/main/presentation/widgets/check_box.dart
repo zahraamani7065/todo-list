@@ -5,7 +5,7 @@ class MyCheckBox extends StatelessWidget {
   final bool value;
   final Function() onTap;
 
-  const MyCheckBox({super.key, required this.value, required this.onTap});
+  const MyCheckBox({super.key , required this.value, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

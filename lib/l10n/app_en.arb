@@ -27,5 +27,16 @@
  "taskTitle":"task title",
  "description":"description",
  "search":"search task ....",
- "add":"add"
+ "add":"add",
+ "categoryAppBar":"create new category",
+ "selectPriority":"select priority",
+ "chooseCategory":"choose icon",
+ "addCategory":"add category",
+ "categoryName":"category name :",
+ "enterName":"category name",
+ "categoryIcon":"category icon:",
+ "chooseIcon":"choose icon from library",
+ "categoryColor":"category color:",
+ "submit":"submit",
+ "cancel":"cancel"
 }

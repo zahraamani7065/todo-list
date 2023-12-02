@@ -5,24 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:todo_list_app/features/main/domain/entity/data_entity.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/get_task_status.dart';
-import 'package:todo_list_app/features/main/presentation/%20block/save_task_status.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/task_list_bloc.dart';
-import '../../../../core/services/locator.dart';
 import '../widgets/items_description.dart';
 import '../widgets/priority.dart';
 import '../widgets/check_box.dart';
 import '../widgets/emptyState.dart';
 import '../widgets/searchBox.dart';
 
-Color getRandomColor() {
-  Random random = Random();
-  return Color.fromARGB(
-    255,
-    random.nextInt(256),
-    random.nextInt(256),
-    random.nextInt(256),
-  );
-}
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -70,9 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, state) {
           if (state.getAllDataStatus is GetAllDataLoading) {
             BlocProvider.of<TaskListBloc>(context).add(GetAllDataEvent());
-
-
-
 
             print("get data**");
           } else if (state.getAllDataStatus is GetAllDataCompleted) {
@@ -149,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(5),
-                                              color: getRandomColor()),
+                                              color: Color(task.category.categoryColorEntity),),
                                           child: Padding(
                                               padding: const EdgeInsets.all(4),
                                               child: Center(

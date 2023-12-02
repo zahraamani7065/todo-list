@@ -55,7 +55,7 @@ class ThemeConfig {
             headline5: TextStyle(
                 color: primaryTextColor,
                 fontWeight: FontWeight.w500,
-                fontSize: 20)),
+                fontSize: 22)),
         backgroundColor: backgroundColor,
         colorScheme: ColorScheme(
           secondary: secondry,

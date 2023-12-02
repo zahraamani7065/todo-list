@@ -9,19 +9,17 @@ import '../data_source/local/data.dart';
 
 class DataRepositoryImpl implements DataRepository {
   final box = Hive.box<Task>(taskBoxName);
+
   @override
   Future<DataState<DataEntity>> createOrUpdate(DataEntity data) async {
-
     // Convert DataEntity to Task using the constructor
     Task task = Task.fromDataEntity(data);
 
     // Add the Task object to the Hive box
     await box.add(task);
     print(task);
-   // await box.clear();
+    // await box.clear();
     return DataSuccess(data);
-
-
   }
 
   @override
@@ -50,29 +48,32 @@ class DataRepositoryImpl implements DataRepository {
 
   @override
   Future<DataState<List<DataEntity>>> getAll({String? searchKeyword}) async {
-
     List<Task> tasks = box.values.toList();
     print("data is $tasks");
 
     try {
-      List<DataEntity> data = tasks.map((task) => DataEntity(
-        name: task.name,
-        iscompleted: task.isComleted,
-        proirity: task.proirity,
-        dateTime: task.dateTime,
-        description: task.description,
-        category: CategoryEntity(categoryColorEntity: task.category.color, categoryNameEntity: task.category.name, categoryIconEntity: task.category.icon), // You should handle this conversion if needed
-      )).toList();
+      List<DataEntity> data = tasks
+          .map((task) => DataEntity(
+                name: task.name,
+                iscompleted: task.isComleted,
+                proirity: task.proirity,
+                dateTime: task.dateTime,
+                description: task.description,
+                category: CategoryEntity(
+                    categoryColorEntity: task.category.color,
+                    categoryNameEntity: task.category.name,
+                    categoryIconEntity: task.category
+                        .icon), // You should handle this conversion if needed
+              ))
+          .toList();
       return DataSuccess(data);
-    }
-    catch (e) {
+    } catch (e) {
       return DataFailed(e.toString());
     }
   }
 
   @override
   Future<void> initDb() async {
-    final box =await Hive.openBox<DataEntity>(taskBoxName);
+    final box = await Hive.openBox<DataEntity>(taskBoxName);
   }
-
 }
