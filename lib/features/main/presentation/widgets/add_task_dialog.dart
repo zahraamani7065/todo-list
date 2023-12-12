@@ -25,6 +25,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   late TextEditingController _controller;
   late int _proirity;
   late TextEditingController _descriptionController;
+  CategoryEntity? selectedCategory;
 
 
   // late final TaskListBloc taskListBloc;
@@ -76,7 +77,6 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
 
       return saveData != getData;
     }
-    CategoryEntity? selectedCategory;
     return BlocBuilder<TaskListBloc, TaskListState>(
         buildWhen: customBuildWhen,
         builder: (BuildContext context, state) {
