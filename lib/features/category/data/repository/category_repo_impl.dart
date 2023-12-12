@@ -13,7 +13,9 @@ class CategoryRepositoryIml extends CategoryRepository {
   Future<DataState<CategoryEntity>> insertCategory(
       CategoryEntity categoryEntity) async {
     CategoryData categoryData = CategoryData.fromCategoryEntity(categoryEntity);
+   // box.clear();
     await box.add(categoryData);
+
     return DataSuccess(categoryEntity);
   }
 

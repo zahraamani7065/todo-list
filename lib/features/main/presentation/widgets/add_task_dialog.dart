@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_list_app/features/category/data/data_source/category_data.dart';
 import 'package:todo_list_app/features/category/domain/entity/category_entity.dart';
+import 'package:todo_list_app/features/category/presentation/bloc/get_category_status.dart';
 import 'package:todo_list_app/features/main/domain/entity/data_entity.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/save_task_status.dart';
 import 'package:todo_list_app/features/main/presentation/%20block/task_list_bloc.dart';
@@ -24,6 +26,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   late int _proirity;
   late TextEditingController _descriptionController;
 
+
   // late final TaskListBloc taskListBloc;
 
   @override
@@ -41,6 +44,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     _controller = TextEditingController();
     _descriptionController = TextEditingController();
     _proirity = 1;
+
   }
 
   void resetDialogState() {
@@ -72,112 +76,104 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
 
       return saveData != getData;
     }
+    CategoryEntity? selectedCategory;
+    return BlocBuilder<TaskListBloc, TaskListState>(
+        buildWhen: customBuildWhen,
+        builder: (BuildContext context, state) {
+              return AlertDialog(
+                title: Text(
+                  localization!.addTask,
+                  style: textTheme.headline5,
+                ),
+                content:
+                StatefulBuilder( // You need this, notice the parameters below:
+                    builder: (BuildContext context, StateSetter setState) {
+                      return Container(
+                          height: height / 4,
+                          child: Column(
+                            children: [
+                              TextField(
+                                controller: _controller,
+                                decoration:
+                                InputDecoration(
+                                    labelText: localization.taskTitle),
+                              ),
+                              TextField(
+                                controller: _descriptionController,
+                                decoration:
+                                InputDecoration(labelText: localization
+                                    .description),
+                              )
+                            ],
+                          ));
+                    }),
+                actions: [
+                  Row(children: [
+                    IconButton(
+                        onPressed: () async {
+                          DateTime? pickedDate = await buildShowDatePicker(
+                              context);
+                          if (pickedDate != null) {
+                            print(pickedDate);
+                            String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                            print(formattedDate);
+                            if (pickedDate != null) {
+                              setState(() {
+                                _dateTime = pickedDate;
+                                dateInput.text = formattedDate;
+                              });
+                            }
+                          } else {}
+                        },
+                        icon: const Icon(Icons.access_alarm)),
+                    IconButton(
+                        onPressed: () async{
+                            selectedCategory=await showDialog<CategoryEntity>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CategoryDialog();
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.category)),
+                    IconButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return priorityDialog(localization, textTheme,
+                                    width,
+                                    height, themeColor);
+                              });
+                        },
+                        icon: const Icon(Icons.flag)),
+                    Expanded(
+                        child: TextButton(
+                            child: Text(localization.add),
+                            onPressed: () async {
+                              // print("category data is  "+ selectedCategory );
+                              // IconData iconData = CupertinoIcons.home;
+                              final task = DataEntity(
+                                  name: _controller.text,
+                                  description: _descriptionController.text
+                                      .toString(),
+                                  iscompleted: false,
+                                  dateTime: _dateTime,
+                                  category: selectedCategory ?? CategoryEntity(categoryColorEntity:Color(0xFFB74093).value, categoryNameEntity: "Home", categoryIconEntity: "Home"),
+                                  proirity: _proirity);
+                              BlocProvider.of<TaskListBloc>(context)
+                                  .add(SaveDataEvent(task));
+                              resetDialogState();
+                              Navigator.of(context).pop();
+                            })),
+                  ])
+                ],
+              );
 
-    return
-        // BlocProvider(
-        // create: (context) => locator<TaskListBloc>(),
-        // child:
-        BlocBuilder<TaskListBloc, TaskListState>(
-      buildWhen: customBuildWhen,
-      builder: (BuildContext context, state) {
-        return AlertDialog(
-          title: Text(
-            localization!.addTask,
-            style: textTheme.headline5,
-          ),
-          content:
-              StatefulBuilder(// You need this, notice the parameters below:
-                  builder: (BuildContext context, StateSetter setState) {
-            return Container(
-                height: height / 4,
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: _controller,
-                      decoration:
-                          InputDecoration(labelText: localization.taskTitle),
-                    ),
-                    TextField(
-                      controller: _descriptionController,
-                      decoration:
-                          InputDecoration(labelText: localization.description),
-                    )
-                  ],
-                ));
-          }),
-          actions: [
-            Row(children: [
-              IconButton(
-                  onPressed: () async {
-                    DateTime? pickedDate = await buildShowDatePicker(context);
-                    if (pickedDate != null) {
-                      print(pickedDate);
-                      String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
-                      print(formattedDate);
-                      if (pickedDate != null) {
-                        setState(() {
-                          _dateTime = pickedDate;
-                          dateInput.text = formattedDate;
-                        });
-                      }
-                    } else {}
-                  },
-                  icon: const Icon(Icons.access_alarm)),
-              IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return
-                            // BlocProvider(
-                            // create: (context) => locator<CategoryBloc>(),
-                            // child:
-                            CategoryDialog()
-                            // )
-                            ;
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.category)),
-              IconButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return priorityDialog(localization, textTheme, width,
-                              height, themeColor);
-                        });
-                  },
-                  icon: const Icon(Icons.flag)),
-              Expanded(
-                  child: TextButton(
-                      child: Text(localization.add),
-                      onPressed: () async {
-                        print("loading state");
-                        IconData iconData = CupertinoIcons.home;
-                        final task = DataEntity(
-                            name: _controller.text,
-                            description: _descriptionController.text.toString(),
-                            iscompleted: false,
-                            dateTime: _dateTime,
-                            category: CategoryEntity(
-                              categoryIconEntity: iconData.codePoint.toString(),
-                              categoryNameEntity: "Home",
-                              categoryColorEntity:
-                                  const Color(0xFF0000FF).value,
-                            ),
-                            proirity: _proirity);
-                        BlocProvider.of<TaskListBloc>(context)
-                            .add(SaveDataEvent(task));
-                        resetDialogState();
-                        Navigator.of(context).pop();
-                      })),
-            ])
-          ],
-        );
-      },
-    );
+
+      }  );
+
   }
 
   Future<DateTime?> buildShowDatePicker(BuildContext context) {
